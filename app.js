@@ -1,33 +1,40 @@
 import express from "express";
-import { create, update, destroy } from "./data/fs/products.js";
+import productManager from "./data/fs/productManager.js";
 
 const app = express();
 
-//configurar puerto
-const port = 8080;
-const ready = console.log("server ready on port" + port);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.listen(port,ready);
+app.get("/products", async (req, res) =>{
+
+    try{
+    const { limit } = req.query;
+    const products = await productManager.getProducts(limit);
+
+    res.status(200).json(products);
+    } catch (error) {
+    console.log(error);
+    }
+});
 
 //para configurar solicitudes/peticiones
-app.get("/", (req, res) => {
+app.get("/products/:pid", async (req, res) => {
     try{
-      const product = "Welcome to coder-products"
-      return res.json({status: 200, response: product})
-    }catch(error){
-      console.log(error);
-      return res.json({status: 500, response: "error"})
-    }
-})
+        const { pid } = req.params;
 
-app.get("/products", read)
+        const product = await productManager.getProductById(parseInt(pid));
 
-async function read(req, res){
-    try{
-      const all = await read();
-      return res.json({status: 200, response: all})
-    }catch(error){
-     console.log(error);
-     return res.json({status: 500, response: error.products})
+        res.status(200).json(product);
+
+    }catch (error) {
+        console.log(error);
     }
-}
+});
+
+//configurar puerto
+app.listen(8080, () => {
+    console.log("server ready on port 8080");
+});
+
+
