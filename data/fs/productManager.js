@@ -3,7 +3,7 @@ import path from "path";
 
 //creamos el constructor con el array vacio.
 let products = [];
-let pathFile = "./data/fs/products.json"
+let pathFile = "./data/fs/products.json";
 
 //creamos metodo addProducts para agregar productos al arreglo inicial
 const addProduct = async (product) => {
@@ -42,10 +42,10 @@ const getProducts = async (limit) => {
 
     if(!limit) return products;
 
-
     return products.slice(0, limit);
 };
 
+//Filtrar un producto por el ID
 const getProductById = async (id) => {
     await getProducts();
      const product = products.find ((product) => product.id === id);
@@ -70,10 +70,17 @@ const updateProduct = async (id, dataProduct) => {
     await fs.promises.writeFile(pathFile, JSON.stringify(products));
 };
 
+//Borrar un producto
+const deleteProduct = async (id) => {
+    await getProducts();
+    products = products.filter (product => product.id !== id );
+    await fs.promises.writeFile(pathFile, JSON.stringify(products));
+}
+
 export default {
     addProduct,
     getProductById,
     getProducts,
     updateProduct,
-    deleteProduct,
+    deleteProduct
 };

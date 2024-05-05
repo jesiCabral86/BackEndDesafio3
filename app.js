@@ -13,6 +13,7 @@ app.get("/products", async (req, res) =>{
     const products = await productManager.getProducts(limit);
 
     res.status(200).json(products);
+    
     } catch (error) {
     console.log(error);
     }
@@ -34,7 +35,7 @@ app.get("/products/:pid", async (req, res) => {
 
 //configurar puerto
 app.listen(8080, () => {
-    console.log("server ready on port 8080");
+    console.log('server ready on port 8080');
 });
 
 
